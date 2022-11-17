@@ -1,15 +1,33 @@
 
+
+let paused = false;
 const createCell = () =>   {
-        
+
+    window.addEventListener ("visibilitychange", () => {
+        const celdas = document.getElementsByClassName("cell");
+        if (paused) {
+            for (const celda of celdas) {
+                celda.style.animationPlayState = "paused";
+            } 
+        }  else {
+                for (const celda of celdas) {
+                    celda.style.animationPlayState = "running";
+                }
+            }       
+        paused = !paused;     
+    });
+
+    
+            
     const cellInitialDiameter = 50;  //(px)
     const cellScreenCrossTime = 20;     //(seg)
     const screenWidth = window.innerWidth;      //(px)
-    const groupingFactor = 0.7; // reduce el tiempo que tarda en salir la siguiente celda asi estas se agrupan (se superponen);
+    const groupingFactor = 0.65; // reduce el tiempo que tarda en salir la siguiente celda asi estas se agrupan (se superponen);
 
     const cellMaxSize = 400;            //(%)
     const cellMinSize = 100;            //(%)
 
-    const cellMaxHeight = 30;           //(%)
+    const cellMaxHeight = 25;           //(%)
     const cellMinHeight = 0;            //(%)   
 
     let random01 = Math.random();
@@ -38,7 +56,7 @@ const createCell = () =>   {
                     background-color:white;
                     animation-name: crossScreen;
                     animation-duration: ${cellScreenCrossTime}s;
-                    animation-timing-function: linear;
+                    animation-timing-function: linear
                     `;
 
     document.getElementById("contNube").appendChild(newCell);      
