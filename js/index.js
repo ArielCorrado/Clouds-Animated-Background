@@ -1,35 +1,23 @@
+const screenWidth = window.innerWidth;      //(px)
+const screenHeight = window.innerHeight;
 
+const cellInitialDiameter = 50;  //(px)
+const cellScreenCrossTime = 20;     //(seg)
 
-let paused = false;
+const groupingFactor = 0.65; // reduce el tiempo que tarda en salir la siguiente celda asi estas se agrupan (se superponen) toma valores de 0 a 1;
+
+const cellMaxSize = 400;            //(%)
+const cellMinSize = 100;            //(%)
+
+const cellMaxHeight = 25;           //(%)
+const cellMinHeight = 0;            //(%)  
+
+const cellVelocity = screenWidth / cellScreenCrossTime; //( px/s )
+
+let addPlay = true;
+
 const createCell = () =>   {
-
-    window.addEventListener ("visibilitychange", () => {
-        const celdas = document.getElementsByClassName("cell");
-        if (paused) {
-            for (const celda of celdas) {
-                celda.style.animationPlayState = "paused";
-            } 
-        }  else {
-                for (const celda of celdas) {
-                    celda.style.animationPlayState = "running";
-                }
-            }       
-        paused = !paused;     
-    });
-
-    
-            
-    const cellInitialDiameter = 50;  //(px)
-    const cellScreenCrossTime = 20;     //(seg)
-    const screenWidth = window.innerWidth;      //(px)
-    const groupingFactor = 0.65; // reduce el tiempo que tarda en salir la siguiente celda asi estas se agrupan (se superponen);
-
-    const cellMaxSize = 400;            //(%)
-    const cellMinSize = 100;            //(%)
-
-    const cellMaxHeight = 25;           //(%)
-    const cellMinHeight = 0;            //(%)   
-
+   
     let random01 = Math.random();
     let randomRangeSize = (random01 * cellMaxSize) + ((1 - random01) * cellMinSize)  // Esta linea genera un numero en el rango entre celdaMax y CeldaMin
 
@@ -38,11 +26,9 @@ const createCell = () =>   {
 
     let cellFinalDiameter = cellInitialDiameter * randomRangeSize / 100;        //(px)
     let cellFinalHeight = cellFinalDiameter * randomRangeHeight / 100;  //(px)
-
-    const cellVelocity = screenWidth / cellScreenCrossTime; //( px/s )
-    let newCellCreationDelay = cellFinalDiameter / cellVelocity; // (seg)
-    newCellCreationDelay = newCellCreationDelay * groupingFactor;      
-
+    
+    let newCellCreationDelay = (cellFinalDiameter / cellVelocity) * groupingFactor; // (seg)
+    
     const newCell = document.createElement("div");
     newCell.className = "cell";
     newCell.style =                 //La linea 38 pone las celdas centradas en la mitad de la pantalla y despues las eleva un poco con cellFinalHeight
@@ -59,10 +45,31 @@ const createCell = () =>   {
                     animation-timing-function: linear
                     `;
 
+    newCell.setAttribute("height", cellFinalHeight);                
+
     document.getElementById("contNube").appendChild(newCell);      
 
-    setTimeout(createCell, newCellCreationDelay * 1000);
-    console.log(cellFinalHeight)
+    if (addPlay) {
+        setTimeout(createCell, newCellCreationDelay * 1000)
+    };
+    
+    window.onresize = () => {
+        const cells = document.getElementsByClassName("cell");
+        for (const cell of cells) {
+            cell.style.top = ((window.innerHeight/2)-(cell.offsetHeight/2) - cell.getAttribute("height")) + "px";
+        }
+    }
 }
 
 createCell ();
+
+window.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.getAnimations().forEach((animation) => animation.pause());             //Pausamos todas las animaciones
+        addPlay = false;
+    } else {
+        document.getAnimations().forEach((animation) => animation.play());              //Reanudamos todas las animaciones
+        addPlay = true;
+        createCell();
+    }
+})

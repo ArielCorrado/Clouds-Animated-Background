@@ -15,7 +15,7 @@ body {
     background-color: rgb(84, 147, 184);
     width: 100%;
     height: 100vh;
-        /* overflow-x: hidden; */
+    overflow-x: hidden; 
 }
 
 .contNube {
