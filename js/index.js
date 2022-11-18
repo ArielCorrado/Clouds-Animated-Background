@@ -19,13 +19,10 @@ const cellMaxHeight = cellMinSize * cellMaxHeightPercent / 100;           //(px)
 const cellMinHeightPercent = 0    //(%)  
 const cellMinHeight = cellMinSize * cellMinHeightPercent / 100;           //(px)
 
+let id = 0;
 
-const cellVelocity = screenWidth / cellScreenCrossTime; //( px/s )
-
-
-
-
-const createCloud = (left, timeLife) =>   { 
+const createCloud = (crossWidth, left, timeLife) =>   { 
+    id++;
 
     let leftPosition = -groupingFactor;
 
@@ -34,23 +31,18 @@ const createCloud = (left, timeLife) =>   {
                     position: absolute;  
                     height: 100%;   
                     width: ${screenWidth}px;
-                    left: ${left}px
-                    `
-    document.body.appendChild(contNube);
-    
-    const nube = document.createElement("div");
+                    left: ${left}px;
+                    `;
+
+    const nube = document.createElement("div");  //El 101% es porque sinó queda 1 linea vertical de 1px entre nube y nube (causas desconocidas)
     nube.style = `
                 position: absolute;  
                 height: 50%;   
-                width: 100%;
+                width: 101%;   
                 bottom: 0;
                 background-color: white;
-                animation-name: cloudAnimation;
-                animation-duration: ${cellScreenCrossTime}s;
-                animation-timing-function: linear;
                 `;
-    contNube.appendChild(nube);
-
+    
     while (leftPosition < screenWidth ) {
 
         let random01 = Math.random();
@@ -78,22 +70,36 @@ const createCloud = (left, timeLife) =>   {
                         `;
 
         nube.appendChild(newCell); 
-        
+                
         leftPosition += cellFinalDiameter - groupingFactor;
+
+        document.body.appendChild(contNube);
+
     }    
+
+    contNube.appendChild(nube); 
+    contNube.animate([
+        // keyframes
+        { transform: `translateX(0px)`},
+        { transform: `translateX(${crossWidth}px)` }
+    ], {
+        // timing options
+        duration: timeLife,
+        timingFunction: "linear"
+    });    
     
     setTimeout(() => {
         contNube.remove();
     }, timeLife);
 }
 
-const intervalId = setInterval(() => {
-    createCloud(screenWidth - 1, cellScreenCrossTime * 1000 * 2);   //El -1 es porque sinó queda 1 linea vertical de 1px entre nube y nube (causas desconocidas)
-}, cellScreenCrossTime * 1000);
 
-    
-createCloud(0, cellScreenCrossTime * 1000);
-createCloud(screenWidth - 1, cellScreenCrossTime * 1000 * 2);   //El -1 es porque sinó queda 1 linea vertical de 1px entre nube y nube (causas desconocidas
+setInterval(() => {
+    createCloud( -screenWidth * 2, screenWidth, cellScreenCrossTime * 1000 * 2);   
+}, cellScreenCrossTime * 1000);
+  
+createCloud(-screenWidth, 0, cellScreenCrossTime * 1000);
+createCloud(-screenWidth * 2, screenWidth, cellScreenCrossTime * 1000 * 2);   
 
 
 
