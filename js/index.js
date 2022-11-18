@@ -1,30 +1,57 @@
 const screenWidth = window.innerWidth;      //(px)
 const screenHeight = window.innerHeight;
 
-const cellScreenCrossTime = 20;     //(seg)
+const cellScreenCrossTime = 10;     //(seg)
 
 const amplitude = 100; // (px)
 
 const cloudWidth = 500; // (px)
 
 const cellMaxSize = 150;            //(px)
-const cellMinSize = 70;            //(px)
+const cellMinSize = 50;            //(px)
 
 const groupingFactor = 50; //  (%)
 const groupingPx = cellMinSize * groupingFactor / 100;
 
-const cellMaxHeight = 30;           //(px)
-const cellMinHeight = 0;            //(px)  
+const cellMaxHeightPercent = 30 // (%)
+const cellMaxHeight = cellMinSize * cellMaxHeightPercent / 100;           //(px)
+
+const cellMinHeightPercent = 0    //(%)  
+const cellMinHeight = cellMinSize * cellMinHeightPercent / 100;           //(px)
+
 
 const cellVelocity = screenWidth / cellScreenCrossTime; //( px/s )
 
-let leftPosition = -groupingFactor;
 
 
 
-const createClouds = () =>   { 
+const createCloud = (left, timeLife) =>   { 
 
-    while (leftPosition < screenWidth) {
+    let leftPosition = -groupingFactor;
+
+    const contNube = document.createElement("div");         
+    contNube.style =`
+                    position: absolute;  
+                    height: 100%;   
+                    width: ${screenWidth}px;
+                    left: ${left}px
+                    `
+    document.body.appendChild(contNube);
+    
+    const nube = document.createElement("div");
+    nube.style = `
+                position: absolute;  
+                height: 50%;   
+                width: 100%;
+                bottom: 0;
+                background-color: white;
+                animation-name: cloudAnimation;
+                animation-duration: ${cellScreenCrossTime}s;
+                animation-timing-function: linear;
+                `;
+    contNube.appendChild(nube);
+
+    while (leftPosition < screenWidth ) {
 
         let random01 = Math.random();
         let randomRangeSize = (random01 * cellMaxSize) + ((1 - random01) * cellMinSize);  // Esta linea genera un numero en el rango entre celdaMax y CeldaMin
@@ -37,27 +64,36 @@ const createClouds = () =>   {
         let sinHeight = Math.abs(Math.sin( (leftPosition + (cellFinalDiameter/2)) * 3.14159 / cloudWidth) * amplitude);
         
         const newCell = document.createElement("div");
-        newCell.className = "cell";
         newCell.style =                 
                         `
                         width:${cellFinalDiameter}px; 
-                        height:${500}px; 
-                        border-radius:${cellFinalDiameter/2}px; 
+                        height:${cellFinalDiameter}px; 
+                        border-top-right-radius: ${cellFinalDiameter/2}px;
+                        border-top-left-radius: ${cellFinalDiameter/2}px;
                         left:${leftPosition}px; 
                         position:absolute; 
-                        top:${(-cellFinalDiameter/2) - sinHeight - cellFinalHeight}px;      
+                        top:${-(cellFinalDiameter/2) - sinHeight - cellFinalHeight}px;      
+                        height: ${(cellFinalDiameter/2) + sinHeight + cellFinalHeight}px;
                         background-color:white;
                         `;
-        
-        document.getElementById("baseNube").appendChild(newCell);      
 
+        nube.appendChild(newCell); 
+        
         leftPosition += cellFinalDiameter - groupingFactor;
     }    
-
+    
+    setTimeout(() => {
+        contNube.remove();
+    }, timeLife);
 }
 
-createClouds();
+const intervalId = setInterval(() => {
+    createCloud(screenWidth - 1, cellScreenCrossTime * 1000 * 2);   //El -1 es porque sinó queda 1 linea vertical de 1px entre nube y nube (causas desconocidas)
+}, cellScreenCrossTime * 1000);
 
+    
+createCloud(0, cellScreenCrossTime * 1000);
+createCloud(screenWidth - 1, cellScreenCrossTime * 1000 * 2);   //El -1 es porque sinó queda 1 linea vertical de 1px entre nube y nube (causas desconocidas
 
 
 
