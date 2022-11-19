@@ -1,18 +1,30 @@
 let skyWidth = screen.width;           //(px)size   screen.width es el ancho en pixels del monitor del usuario
 let intervalIds = [];
 
-const setSkyWidth = () => {
-    screen.width > screen.height ? skyWidth = screen.width : skyWidth = screen.height;
+const setSkyWidth = () => {                 //Esta funcion verifica si el alto o el ancho de la pantalla es mas alto y al mas alto lo configura como el ancho del contenedor de nubes
+    if (screen.width > screen.height) { 
+        skyWidth = screen.width;
+    } else { 
+        skyWidth = screen.height;
+    }    
 }
 setSkyWidth();
 
-const createSystem = (top, color, crossTime, index, func, size) => {
+const getSkyWidth = () => {                 //Esta funcion verifica si el alto o el ancho de la pantalla es mas alto y al mas alto lo configura como el ancho del contenedor de nubes
+    if (screen.width > screen.height) { 
+        return screen.width;
+    } else { 
+        return screen.height;
+    }    
+}
+
+const createSystem = (top, color, crossTime, index, func, size, div) => {
 
     const cellMinTimeIncrease = 2000;  //(mSeg);
     const cellMaxTimeIncrease = 5000;  //(mSeg);
     const cellScreenCrossTime = crossTime;         //(seg)
 
-    let cloudWidth = skyWidth/6;         //(px)   //Ancho de cada nube
+    let cloudWidth = skyWidth/div;         //(px)   //Ancho de cada nube
     let cloudAmplitude = cloudWidth/2.5;      //(px)100
     let cellMaxDiameter = skyWidth/10;            //(px)150
     let cellMinDiameter = cellMaxDiameter*0.4;            //(px)75
@@ -125,23 +137,25 @@ const createSystem = (top, color, crossTime, index, func, size) => {
 
 const createSky = () => {
 
-    createSystem(0, "#2D72B7", 80, 1, "sin", 50);
+    createSystem(0, "#2D72B7", 120, 1, "sin", 30, 8);
 
-    createSystem(50, "#5B94CD", 70, 2, "cos", 50);
+    createSystem(50, "#5B94CD", 80, 2, "cos", 40, 7);
 
-    createSystem(100, "#94BCE3", 60, 3, "sin", 50);
+    createSystem(125, "#94BCE3", 60, 3, "sin", 50, 6);
 
-    createSystem(175, "#D5E6F7", 50, 4, "cos", 50);
+    createSystem(200, "#D5E6F7", 40, 4, "cos", 60, 5);
 }
 
 createSky();
 
 window.onresize = () => {
-    intervalIds.forEach((id) => clearInterval(id));
-    intervalIds.length = 0;
-    document.getElementById("contenedor").innerHTML = "";
-    setSkyWidth();
-    createSky();
+    if(skyWidth != getSkyWidth()) {
+        intervalIds.forEach((id) => clearInterval(id));
+        intervalIds.length = 0;
+        document.getElementById("contenedor").innerHTML = "";
+        setSkyWidth();
+        createSky();
+    }    
 }
 
 
