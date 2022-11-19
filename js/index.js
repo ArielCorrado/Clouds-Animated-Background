@@ -4,20 +4,19 @@ const createSystem = (top, color, crossTime, index, func, size) => {
 
     const cellMinTimeIncrease = 3000;  //(mSeg);
     const cellMaxTimeIncrease = 6000;  //(mSeg);
-      
     const cellScreenCrossTime = crossTime;         //(seg)
 
-    let cloudAmplitude = 100;         // (px)
-    let cloudWidth = 500;         // (px)
-    let cellMaxDiameter = 150;            //(px)
-    let cellMinDiameter = 75;            //(px)
+    let cloudWidth = screenWidth/6;         //(px)   //Ancho de cada nube
+    let cloudAmplitude = cloudWidth/3;      //(px)100
+    let cellMaxDiameter = screenWidth/10;            //(px)150
+    let cellMinDiameter = cellMaxDiameter*0.5;            //(px)75
 
     cloudAmplitude *= size/100;
     cloudWidth *= size/100;
     cellMaxDiameter *= size/100;
     cellMinDiameter *= size/100;
 
-    const groupingFactor = 50;            //(%)
+    const groupingFactor = 50;            //(%)50
     const groupingPx = cellMinDiameter * groupingFactor / 100;
    
     const createCloud = (crossWidth, left, timeLife) =>   { 
@@ -51,8 +50,8 @@ const createSystem = (top, color, crossTime, index, func, size) => {
             let funcHeight = 0;
 
             (func === "sin") ? 
-            funcHeight = Math.abs(Math.sin( (leftPosition + (cellFinalDiameter/2)) * 3.14159 / cloudWidth) * cloudAmplitude) : 
-            funcHeight = Math.abs(Math.cos( (leftPosition + (cellFinalDiameter/2)) * 3.14159 / cloudWidth) * cloudAmplitude)
+            funcHeight = Math.abs(Math.sin((leftPosition + (cellFinalDiameter/2)) * 3.14159 / cloudWidth / 2) * cloudAmplitude) : 
+            funcHeight = Math.abs(Math.cos((leftPosition + (cellFinalDiameter/2)) * 3.14159 / cloudWidth / 2) * cloudAmplitude)
 
             const newCell = document.createElement("div");
             newCell.style =                 
