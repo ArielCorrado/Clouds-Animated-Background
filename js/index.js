@@ -39,7 +39,7 @@ const createSystem = (top, color, crossTime, index, func, size) => {
                     height: 50%;   
                     width: 101%;   
                     bottom: 0;
-                        background-color: ${color};
+                    background-color: ${color};
                     `;
         
         while (leftPosition < screenWidth ) {
