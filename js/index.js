@@ -1,21 +1,21 @@
-const screenWidth = window.innerWidth;      //(px)size
-const screenHeight = window.innerHeight;
+ 
+const createSystem = (color, velocity, size, top) => {
 
-const cellScreenCrossTime = 10;     //(seg)
+    const screenWidth = window.innerWidth;      //(px)size
+    const screenHeight = window.innerHeight;
 
-const cloudAmplitude = 100; // (px)
-const cloudWidth = 500; // (px)
+    const cellScreenCrossTime = 40;         //(seg)
 
-const cellMaxDiameter = 125;            //(px)
-const cellMinDiameter = 50;            //(px)
+    const cloudAmplitude = 100;         // (px)
+    const cloudWidth = 500;         // (px)
 
-const groupingFactor = 50; //  (%)
+    const cellMaxDiameter = 150;            //(px)
+    const cellMinDiameter = 50;            //(px)
 
-const cellMaxHeightPercent = 0 // (%)
-const cellMinHeightPercent = 0    //(%)  
+    const groupingFactor = 50;            //(%)
 
-
-const createSystem = () => {
+    const cellMaxHeightPercent = 0    // (%)
+    const cellMinHeightPercent = 0    //(%) 
 
     const groupingPx = cellMinDiameter * groupingFactor / 100;
     const cellMaxHeight = cellMinDiameter * cellMaxHeightPercent / 100;           //(px)
@@ -99,7 +99,6 @@ const createSystem = () => {
     createCloud(-screenWidth, 0, cellScreenCrossTime * 1000);
     createCloud(-screenWidth * 2, screenWidth, cellScreenCrossTime * 1000 * 2);   
 }
-
 
 createSystem();
 
