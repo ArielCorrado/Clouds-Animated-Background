@@ -1,10 +1,9 @@
- 
+let screenWidth = screen.width;           //(px)size   screen.width es el ancho en pixels del monitor del usuario
+let intervalIds = [];
 const createSystem = (top, color, crossTime, index, func, size) => {
 
     const cellMinTimeIncrease = 3000;  //(mSeg);
     const cellMaxTimeIncrease = 6000;  //(mSeg);
-
-    const screenWidth = screen.width;      //(px)size   screen.width es el ancho en pixels del monitor del usuario
       
     const cellScreenCrossTime = crossTime;         //(seg)
 
@@ -98,7 +97,7 @@ const createSystem = (top, color, crossTime, index, func, size) => {
             timingFunction: "linear"
         });    
 
-        contNube.style.top = `${top}px`;  ///////////////////////////////////////////////////
+        contNube.style.top = `${top}px`;        // Distancia del contenedor de la nube al lado superior de la pantalla (top) llega como parametro de la función createSystem
         document.getElementById("contenedor").appendChild(contNube);
         
         setTimeout(() => {
@@ -106,26 +105,36 @@ const createSystem = (top, color, crossTime, index, func, size) => {
         }, timeLife);
     }
 
-    setInterval(() => {
-        createCloud( -screenWidth * 2, screenWidth, cellScreenCrossTime * 1000 * 2);   
+    const intervalId = setInterval(() => {
+        createCloud( -screenWidth * 2, screenWidth, cellScreenCrossTime * 1000 * 2);    //Tercera Nube (cruza la distancia de 2 pantallas)
     }, cellScreenCrossTime * 1000);
+    intervalIds.push(intervalId);
     
-    createCloud(-screenWidth, 0, cellScreenCrossTime * 1000);
-    createCloud(-screenWidth * 2, screenWidth, cellScreenCrossTime * 1000 * 2);   
+    createCloud(-screenWidth, 0, cellScreenCrossTime * 1000);                           //Esta es la nube que se ve primero y cubre toda la pantalla (solo cruza el ancho de una pantalla)
+    createCloud(-screenWidth * 2, screenWidth, cellScreenCrossTime * 1000 * 2);         //Esta es la nube que viene despues (2º nube) (cruza la distancia de 2 pantallas)
+    
 }
 
+const createSky = () => {
 
+    createSystem(0, "#2D72B7", 50, 1, "sin");
 
+    createSystem(50, "#5B94CD", 40, 2, "cos");
 
-createSystem(0, "#2D72B7", 60, 1, "sin");
+    createSystem(100, "#94BCE3", 30, 3, "sin");
+    
+    createSystem(175, "#D5E6F7", 20, 4, "cos");
+}
 
-createSystem(50, "#5B94CD", 40, 2, "cos");
+createSky();
 
-createSystem(100, "#94BCE3", 40, 3, "sin");
-
-createSystem(150, "#D5E6F7", 30, 4, "cos");
-
-
+window.onresize = () => {
+    intervalIds.forEach((id) => clearInterval(id));
+    intervalIds.length = 0;
+    document.getElementById("contenedor").innerHTML = "";
+    screenWidth = screen.width;
+    createSky();
+}
 
 
 
