@@ -18,7 +18,7 @@ const getSkyWidth = () => {                 //Esta funcion verifica si el alto o
     }    
 }
 
-const createSystem = (top, color, crossTime, index, func, size, div) => {
+const createSystem = (top, color, crossTime, index, func, size, div, altura) => {
 
     const cellMinTimeIncrease = 2000;  //(mSeg);
     const cellMaxTimeIncrease = 5000;  //(mSeg);
@@ -33,6 +33,7 @@ const createSystem = (top, color, crossTime, index, func, size, div) => {
     cloudWidth *= size/100;
     cellMaxDiameter *= size/100;
     cellMinDiameter *= size/100;
+    top = cloudWidth * 1.5 - altura;
 
     const groupingFactor = 50;            //(%)50
     const groupingPx = cellMinDiameter * groupingFactor / 100;
@@ -137,13 +138,13 @@ const createSystem = (top, color, crossTime, index, func, size, div) => {
 
 const createSky = () => {
 
-    createSystem(0, "#2D72B7", 120, 1, "sin", 30, 8);
+    createSystem(0, "#2D72B7", 120, 1, "sin", 30, 8, 200);
 
-    createSystem(50, "#5B94CD", 80, 2, "cos", 40, 7);
+    createSystem(1, "#5B94CD", 80, 2, "cos", 40, 7, 200);
 
-    createSystem(125, "#94BCE3", 60, 3, "sin", 50, 6);
+    createSystem(1, "#94BCE3", 60, 3, "sin", 50, 6, 200);
 
-    createSystem(200, "#D5E6F7", 40, 4, "cos", 60, 5);
+    createSystem(1, "#D5E6F7", 40, 4, "cos", 60, 5, 200);
 }
 
 createSky();
