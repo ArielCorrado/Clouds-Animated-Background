@@ -1,6 +1,9 @@
  
 const createSystem = (color, velocity, size, top) => {
 
+    const cellMinTimeIncrease = 3000;  //(mSeg);
+    const cellMaxTimeIncrease = 5000;  //(mSeg);
+
     const screenWidth = window.innerWidth;      //(px)size
     const screenHeight = window.innerHeight;
 
@@ -45,13 +48,13 @@ const createSystem = (color, velocity, size, top) => {
         while (leftPosition < screenWidth ) {
 
             let random01 = Math.random();
-            let randomRangeSize = (random01 * cellMaxDiameter) + ((1 - random01) * cellMinDiameter);  // Esta linea genera un numero en el rango entre celdaMax y CeldaMin
-            let cellFinalDiameter = randomRangeSize   //(px)
+            let randomRange = (random01 * cellMaxDiameter) + ((1 - random01) * cellMinDiameter);  // Esta linea genera un numero en el rango entre celdaMax y CeldaMin
+            let cellFinalDiameter = randomRange   //(px)
 
             random01 = Math.random();
-            randomRangeHeight = (random01 * cellMaxHeight) + ((1 - random01) * cellMinHeight); 
-            let cellFinalHeight = randomRangeHeight  //(px)
-    
+            randomRange = (random01 * cellMaxHeight) + ((1 - random01) * cellMinHeight); 
+            let cellFinalHeight = randomRange  //(px)
+                
             let sinHeight = Math.abs(Math.sin( (leftPosition + (cellFinalDiameter/2)) * 3.14159 / cloudWidth) * cloudAmplitude);
             
             const newCell = document.createElement("div");
@@ -67,6 +70,22 @@ const createSystem = (color, velocity, size, top) => {
                             height: ${(cellFinalDiameter/2) + sinHeight + cellFinalHeight}px;
                             background-color:white;
                             `;
+
+            random01 = Math.random();
+            randomRange = (random01 * cellMaxTimeIncrease) + ((1 - random01) * cellMinTimeIncrease); 
+            let cellFinalTimeIncease = randomRange  //(mSeg)                
+
+            newCell.animate([
+                // keyframes
+                { transform: `scale(105%)`},    //El 105% es porque sino aparece una raya abajo (causa desconocida)
+                { transform: `scale(125%)`}
+            ], {
+                // timing options
+                duration: cellFinalTimeIncease,
+                timingFunction: "linear",
+                iterations: Infinity,
+                direction: "alternate"
+            });                    
 
             baseNube.appendChild(newCell); 
                     
