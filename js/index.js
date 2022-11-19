@@ -1,13 +1,12 @@
  
-const createSystem = (color, velocity, size, top) => {
+const createSystem = (top, color, crossTime, index, func, size) => {
 
     const cellMinTimeIncrease = 3000;  //(mSeg);
-    const cellMaxTimeIncrease = 5000;  //(mSeg);
+    const cellMaxTimeIncrease = 6000;  //(mSeg);
 
-    const screenWidth = window.innerWidth;      //(px)size
-    const screenHeight = window.innerHeight;
-
-    const cellScreenCrossTime = 40;         //(seg)
+    const screenWidth = screen.width;      //(px)size   screen.width es el ancho en pixels del monitor del usuario
+      
+    const cellScreenCrossTime = crossTime;         //(seg)
 
     const cloudAmplitude = 100;         // (px)
     const cloudWidth = 500;         // (px)
@@ -29,6 +28,7 @@ const createSystem = (color, velocity, size, top) => {
                         height: 100%;   
                         width: ${screenWidth}px;
                         left: ${left}px;
+                        z-index: ${index};
                         `;
 
         const baseNube = document.createElement("div");  //El 101% es porque sinó queda 1 linea vertical de 1px entre nube y nube (causas desconocidas)
@@ -37,7 +37,7 @@ const createSystem = (color, velocity, size, top) => {
                     height: 50%;   
                     width: 101%;   
                     bottom: 0;
-                    background-color: white;
+                        background-color: ${color};
                     `;
         
         while (leftPosition < screenWidth ) {
@@ -46,8 +46,12 @@ const createSystem = (color, velocity, size, top) => {
             let randomRange = (random01 * cellMaxDiameter) + ((1 - random01) * cellMinDiameter);  // Esta linea genera un numero en el rango entre celdaMax y CeldaMin
             let cellFinalDiameter = randomRange   //(px)
                  
-            let sinHeight = Math.abs(Math.sin( (leftPosition + (cellFinalDiameter/2)) * 3.14159 / cloudWidth) * cloudAmplitude);
-            
+            let funcHeight = 0;
+
+            (func === "sin") ? 
+            funcHeight = Math.abs(Math.sin( (leftPosition + (cellFinalDiameter/2)) * 3.14159 / cloudWidth) * cloudAmplitude) : 
+            funcHeight = Math.abs(Math.cos( (leftPosition + (cellFinalDiameter/2)) * 3.14159 / cloudWidth) * cloudAmplitude)
+
             const newCell = document.createElement("div");
             newCell.style =                 
                             `
@@ -57,9 +61,9 @@ const createSystem = (color, velocity, size, top) => {
                             border-top-left-radius: ${cellFinalDiameter/2}px;
                             left:${leftPosition}px; 
                             position:absolute; 
-                            top:${-(cellFinalDiameter/2) - sinHeight}px;      
-                            height: ${(cellFinalDiameter/2) + sinHeight}px;
-                            background-color:white;
+                            top:${-(cellFinalDiameter/2) - funcHeight}px;      
+                            height: ${(cellFinalDiameter/2) + funcHeight}px;
+                            background-color: ${color};
                             `;
 
             random01 = Math.random();
@@ -94,6 +98,7 @@ const createSystem = (color, velocity, size, top) => {
             timingFunction: "linear"
         });    
 
+        contNube.style.top = `${top}px`;  ///////////////////////////////////////////////////
         document.getElementById("contenedor").appendChild(contNube);
         
         setTimeout(() => {
@@ -112,7 +117,13 @@ const createSystem = (color, velocity, size, top) => {
 
 
 
-createSystem();
+createSystem(0, "#2D72B7", 60, 1, "sin");
+
+createSystem(50, "#5B94CD", 40, 2, "cos");
+
+createSystem(100, "#94BCE3", 40, 3, "sin");
+
+createSystem(150, "#D5E6F7", 30, 4, "cos");
 
 
 
