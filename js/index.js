@@ -33,8 +33,8 @@ const createSystem = (color, velocity, size, top) => {
                         left: ${left}px;
                         `;
 
-        const nube = document.createElement("div");  //El 101% es porque sinó queda 1 linea vertical de 1px entre nube y nube (causas desconocidas)
-        nube.style = `
+        const baseNube = document.createElement("div");  //El 101% es porque sinó queda 1 linea vertical de 1px entre nube y nube (causas desconocidas)
+        baseNube.style = `
                     position: absolute;  
                     height: 50%;   
                     width: 101%;   
@@ -68,15 +68,12 @@ const createSystem = (color, velocity, size, top) => {
                             background-color:white;
                             `;
 
-            nube.appendChild(newCell); 
+            baseNube.appendChild(newCell); 
                     
             leftPosition += cellFinalDiameter - groupingPx;
-
-            document.getElementById("contenedor").appendChild(contNube);
-
         }    
 
-        contNube.appendChild(nube); 
+        contNube.appendChild(baseNube); 
         contNube.animate([
             // keyframes
             { transform: `translateX(0px)`},
@@ -86,6 +83,8 @@ const createSystem = (color, velocity, size, top) => {
             duration: timeLife,
             timingFunction: "linear"
         });    
+
+        document.getElementById("contenedor").appendChild(contNube);
         
         setTimeout(() => {
             contNube.remove();
@@ -100,7 +99,20 @@ const createSystem = (color, velocity, size, top) => {
     createCloud(-screenWidth * 2, screenWidth, cellScreenCrossTime * 1000 * 2);   
 }
 
+
+
+
 createSystem();
+
+
+
+
+
+
+
+
+
+
 
 
 
