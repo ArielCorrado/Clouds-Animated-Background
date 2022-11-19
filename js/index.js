@@ -7,14 +7,17 @@ const createSystem = (top, color, crossTime, index, func, size) => {
       
     const cellScreenCrossTime = crossTime;         //(seg)
 
-    const cloudAmplitude = 100;         // (px)
-    const cloudWidth = 500;         // (px)
+    let cloudAmplitude = 100;         // (px)
+    let cloudWidth = 500;         // (px)
+    let cellMaxDiameter = 150;            //(px)
+    let cellMinDiameter = 75;            //(px)
 
-    const cellMaxDiameter = 150;            //(px)
-    const cellMinDiameter = 75;            //(px)
+    cloudAmplitude *= size/100;
+    cloudWidth *= size/100;
+    cellMaxDiameter *= size/100;
+    cellMinDiameter *= size/100;
 
     const groupingFactor = 50;            //(%)
- 
     const groupingPx = cellMinDiameter * groupingFactor / 100;
    
     const createCloud = (crossWidth, left, timeLife) =>   { 
@@ -117,13 +120,13 @@ const createSystem = (top, color, crossTime, index, func, size) => {
 
 const createSky = () => {
 
-    createSystem(0, "#2D72B7", 50, 1, "sin");
+    createSystem(0, "#2D72B7", 50, 1, "sin", 50);
 
-    createSystem(50, "#5B94CD", 40, 2, "cos");
+    createSystem(50, "#5B94CD", 40, 2, "cos", 50);
 
-    createSystem(100, "#94BCE3", 30, 3, "sin");
-    
-    createSystem(175, "#D5E6F7", 20, 4, "cos");
+    createSystem(100, "#94BCE3", 30, 3, "sin", 50);
+
+    createSystem(175, "#D5E6F7", 20, 4, "cos", 50);
 }
 
 createSky();
