@@ -13,17 +13,12 @@ const createSystem = (color, velocity, size, top) => {
     const cloudWidth = 500;         // (px)
 
     const cellMaxDiameter = 150;            //(px)
-    const cellMinDiameter = 50;            //(px)
+    const cellMinDiameter = 75;            //(px)
 
     const groupingFactor = 50;            //(%)
-
-    const cellMaxHeightPercent = 0    // (%)
-    const cellMinHeightPercent = 0    //(%) 
-
+ 
     const groupingPx = cellMinDiameter * groupingFactor / 100;
-    const cellMaxHeight = cellMinDiameter * cellMaxHeightPercent / 100;           //(px)
-    const cellMinHeight = cellMinDiameter * cellMinHeightPercent / 100;           //(px)
-
+   
     const createCloud = (crossWidth, left, timeLife) =>   { 
         
         let leftPosition = -groupingPx;
@@ -50,11 +45,7 @@ const createSystem = (color, velocity, size, top) => {
             let random01 = Math.random();
             let randomRange = (random01 * cellMaxDiameter) + ((1 - random01) * cellMinDiameter);  // Esta linea genera un numero en el rango entre celdaMax y CeldaMin
             let cellFinalDiameter = randomRange   //(px)
-
-            random01 = Math.random();
-            randomRange = (random01 * cellMaxHeight) + ((1 - random01) * cellMinHeight); 
-            let cellFinalHeight = randomRange  //(px)
-                
+                 
             let sinHeight = Math.abs(Math.sin( (leftPosition + (cellFinalDiameter/2)) * 3.14159 / cloudWidth) * cloudAmplitude);
             
             const newCell = document.createElement("div");
@@ -66,8 +57,8 @@ const createSystem = (color, velocity, size, top) => {
                             border-top-left-radius: ${cellFinalDiameter/2}px;
                             left:${leftPosition}px; 
                             position:absolute; 
-                            top:${-(cellFinalDiameter/2) - sinHeight - cellFinalHeight}px;      
-                            height: ${(cellFinalDiameter/2) + sinHeight + cellFinalHeight}px;
+                            top:${-(cellFinalDiameter/2) - sinHeight}px;      
+                            height: ${(cellFinalDiameter/2) + sinHeight}px;
                             background-color:white;
                             `;
 
