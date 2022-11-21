@@ -21,8 +21,8 @@ const getSkyWidth = () => {                 //Esta funcion verifica si el alto o
 
 let funcSin = false;
 
-const cloudsSystemAmplitudes = [];
-const createSystem = (color, crossTime, size, systemsCount, skyTop, systemsDistance, index) => {
+const cloudsSystemAmplitudes = [0];
+const createSystem = (color, crossTime, size, cloudsXSystem, skyTop, systemsDistance, index, systemCount) => {
  
     funcSin = !funcSin;
     
@@ -30,18 +30,28 @@ const createSystem = (color, crossTime, size, systemsCount, skyTop, systemsDista
     const cellMaxTimeIncrease = 5000;  //(mSeg);
     const cellScreenCrossTime = crossTime[index];         //(seg)
 
-    let cloudWidth = skyWidth/systemsCount;         //(px)   //Ancho de cada nube
-    let cloudAmplitude = cloudWidth/3.5;      //(px)3.5
-    let cellMaxDiameter = skyWidth/11;            //(px)11
-    let cellMinDiameter = cellMaxDiameter * 0.2;            //(px)0.2
+    const cloudWidth = (skyWidth/cloudsXSystem);           //(px)   //Ancho de cada nube
+    const cloudAmplitude = (cloudWidth/5) * (size /100);                //(px)5
+    const cellMaxDiameter = (cloudWidth/3) * (size /100);               //(px)3
+    const cellMinDiameter = (cellMaxDiameter * 0.40) * (size /100);      //(px)0.5
 
-    cloudAmplitude *= size/100;
-    cellMaxDiameter *= size/100;
-    cellMinDiameter *= size/100;
-            
     const groupingFactor = 35;            //(%)50
     const groupingPx = (cellMinDiameter * groupingFactor / 100);
               
+    let topSystem = cloudAmplitude;         //Corrección altura de la primera nube (por defecto queda muy baja)
+    if (index === (systemCount - 1)) {
+        topSystem *= 0.93;
+    }
+  
+    const contSystem = document.createElement("div");         
+    contSystem.style =`
+                        position: absolute;  
+                        height: 100%;   
+                        width: 100%;
+                        z-index: ${index};
+                        top: ${topSystem * systemsDistance }px;
+                        `;
+
     const createCloud = (crossWidth, left, timeLife) =>   { 
  
         let leftPosition = -groupingPx;
@@ -52,13 +62,12 @@ const createSystem = (color, crossTime, size, systemsCount, skyTop, systemsDista
                         height: 100%;   
                         width: ${skyWidth}px;
                         left: ${left}px;
-                        z-index: ${index};
                         `;
         
         const baseNube = document.createElement("div");  //El 101% es porque sinó queda 1 linea vertical de 1px entre nube y nube (causas desconocidas)
         baseNube.style = `
                     position: absolute;  
-                    height: ${100}%;   
+                    height: ${skyTop}%;   
                     width: 101%;   
                     bottom: 0;
                     background-color: ${color};
@@ -97,7 +106,7 @@ const createSystem = (color, crossTime, size, systemsCount, skyTop, systemsDista
             newCell.animate([
                 // keyframes
                 { transform: `scale(115%)`},    //El 115% es porque sino aparece una raya abajo (causa desconocida)
-                { transform: `scale(145%)`}
+                { transform: `scale(135%)`}
             ], {
                 // timing options
                 duration: cellFinalTimeIncease,
@@ -121,9 +130,10 @@ const createSystem = (color, crossTime, size, systemsCount, skyTop, systemsDista
             duration: timeLife,
             timingFunction: "linear"
         });    
+                      
+        contSystem.appendChild(contNube);
 
-        baseNube.style.top = `${50}%`;        // Distancia del contenedor de la nube al lado superior de la pantalla (top) llega como parametro de la función createSystem
-        document.getElementById("contenedor").appendChild(contNube);
+        document.getElementById("contenedor").appendChild(contSystem);
         
         setTimeout(() => {
             contNube.remove();
@@ -144,16 +154,16 @@ const createSky = (opts, systemCount) => {
 
     let color = opts[0];
     let minCrossTime = opts[1];
-    let size = opts[2];
+    let sizeSystem = opts[2];
     let minCloudsXS = opts[3];
     let skyTop = opts[4];
-    
+    let systemsDistance = opts[5];
+
     let crossTimesSystems = [];
     let colorSystem = color;
-    let sizeSystem = size;
     let numberOfCloudsXS = minCloudsXS;
 
-    let systemsDistance;
+    
     const calculateNewOptions = (i) => {
 
         /*   Colores   */
@@ -185,20 +195,12 @@ const createSky = (opts, systemCount) => {
         Bhex = addZero(Bhex);
 
         colorSystem = "#" + Rhex + Ghex + Bhex;
-                         
-        /*  Size  */
-        if (i != 0) {
-            sizeSystem = sizeSystem + sizeSystem * 0.2;
-        }    
-
+          
         /* Max Clouds per screen */
-        const pasos = 3;                                                                    //Pasos de +2 nubes (eso indica el 2)
+        const pasos = 2;                                                                    //Pasos de +2 nubes (eso indica el 2)
         numberOfCloudsXS = minCloudsXS + ( pasos * (systemCount - 1)) - (i * pasos);  
 
-        /* Sistem distance */ 
-        systemsDistance = i;
-
-        console.log(sizeSystem)
+        // console.log(sizeSystem)
     }
     
         /* CrossTimes Array*/
@@ -210,7 +212,7 @@ const createSky = (opts, systemCount) => {
     for (let i=0 ; i<systemCount ; i++) {
         
         calculateNewOptions(i);
-        createSystem(colorSystem, crossTimesSystems, sizeSystem, numberOfCloudsXS, skyTop, systemsDistance, i);
+        createSystem(colorSystem, crossTimesSystems, sizeSystem, numberOfCloudsXS, skyTop, systemsDistance, i, systemCount);
         
     }
    
@@ -220,11 +222,12 @@ const createSky = (opts, systemCount) => {
     // createSystem("#D5E6F7", 40, 60, 5, 20);
 }
 
-const options = [   "#2D72B7", // (color (Hex)
-                    5, // Min CrossTime(Seg)
-                    25, // size(%)
+const options = [   "#2965A2", // (color (Hex)
+                    30, // Min CrossTime(Seg)
+                    90, // size(%)
                     4, // Min clouds Per Screen Width(int)
-                    50, // skyTop (%)
+                    60, // skyTop (%)
+                    5.5, // system distance (int);
                 ]; 
                                                      
 createSky(options, 5);
