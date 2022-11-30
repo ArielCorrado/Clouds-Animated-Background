@@ -22,7 +22,7 @@ const getSkyWidth = () => {                 //Esta funcion verifica si el alto o
 let funcSin = false;
 
 const cloudsSystemAmplitudes = [0];
-const createSystem = (color, crossTime, size, cloudsXSystem, skyTop, systemsDistance, index, systemCount) => {
+const createSystem = (color, crossTime, size, cloudsXSystem, skyBottom, systemsDistance, index, systemCount) => {
  
     funcSin = !funcSin;
     
@@ -67,7 +67,7 @@ const createSystem = (color, crossTime, size, cloudsXSystem, skyTop, systemsDist
         const baseNube = document.createElement("div");  //El 101% es porque sinó queda 1 linea vertical de 1px entre nube y nube (causas desconocidas)
         baseNube.style = `
                     position: absolute;  
-                    height: ${skyTop}%;   
+                    height: ${skyBottom}%;   
                     width: 101%;   
                     bottom: 0;
                     background-color: ${color};
@@ -156,7 +156,7 @@ const createSky = (opts, systemCount) => {
     let minCrossTime = opts[1];
     let sizeSystem = opts[2];
     let minCloudsXS = opts[3];
-    let skyTop = opts[4];
+    let skyBottom = opts[4];
     let systemsDistance = opts[5];
 
     let crossTimesSystems = [];
@@ -212,21 +212,16 @@ const createSky = (opts, systemCount) => {
     for (let i=0 ; i<systemCount ; i++) {
         
         calculateNewOptions(i);
-        createSystem(colorSystem, crossTimesSystems, sizeSystem, numberOfCloudsXS, skyTop, systemsDistance, i, systemCount);
+        createSystem(colorSystem, crossTimesSystems, sizeSystem, numberOfCloudsXS, skyBottom, systemsDistance, i, systemCount);
         
     }
-   
-    // createSystem("#2D72B7", 120, 30, 8, 20);  
-    // createSystem("#5B94CD", 80, 40, 7, 20);
-    // createSystem("#94BCE3", 60, 50, 6, 20);
-    // createSystem("#D5E6F7", 40, 60, 5, 20);
 }
 
 const options = [   "#2965A2", // (color (Hex)
                     30, // Min CrossTime(Seg)
                     90, // size(%)
                     4, // Min clouds Per Screen Width(int)
-                    60, // skyTop (%)
+                    50, // skyBottom (%)50
                     5.5, // system distance (int);
                 ]; 
                                                      
@@ -242,25 +237,3 @@ window.onresize = () => {
     }    
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-// window.addEventListener("visibilitychange", () => {
-//     if (document.hidden) {
-//         document.getAnimations().forEach((animation) => animation.pause());             //Pausamos todas las animaciones
-//         addPlay = false;
-//     } else {
-//         document.getAnimations().forEach((animation) => animation.play());              //Reanudamos todas las animaciones
-//         addPlay = true;
-//         createCell();
-//     }
-// })
